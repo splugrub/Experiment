@@ -14,10 +14,6 @@
       "rootDirs": [
           "./"
       ],
-  //
-  //    "paths": {
-  //      "@experimentation/*": ["C:\\Users\\Stefan\\sciebo\\Development\\Webstorm\\Experimentation\\*"]
-  //    }
   
     },
   
@@ -26,7 +22,8 @@
                ],
   
     "exclude": [
-      "node_modules"
+      "node_modules",
+      "modules_hard_import/seedrandom"
     ],
     "esModuleInterop": true
     //    "allowSyntheticDefaultImports": true
