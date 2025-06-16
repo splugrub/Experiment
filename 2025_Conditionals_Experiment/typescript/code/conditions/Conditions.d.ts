@@ -4,6 +4,7 @@ export declare class ConditionScriptGenerator {
     private withError;
     private scriptLines;
     private correctScript;
+    private errorPreview;
     private errorPosition;
     private errorSection;
     private maxErrorPosition;
@@ -14,11 +15,13 @@ export declare class ConditionScriptGenerator {
     getErrorSection(): string;
     private getRandomNumber;
     generatePreview(): string;
+    generateErrorPreview(): string;
     generateScript(): string;
     getErrorPosition(): string;
     private getBashScript;
     private getPowershellScript;
     private getPythonCode;
+    private highlightRed;
     createErrorPosition(): void;
 }
 export {};

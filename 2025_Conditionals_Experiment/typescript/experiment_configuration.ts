@@ -130,7 +130,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                     else {
                         writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is incorrect! Correct answer: " + t.expected_answer + "</span>\n");
                         writer.print_string_on_stage("&#9888; " + errorNote)
-                        writer.print_string_on_stage(task.generatePreview())
+                        writer.print_string_on_stage(task.generateErrorPreview())
                     }
                 }
             }
