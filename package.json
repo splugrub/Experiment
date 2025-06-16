@@ -4,8 +4,8 @@
   "description": "1. Clone the current repository\r 2. Clone the repository https://github.com/shanenbe/N-of-1-Experimentation into the current project (i.e., IN the already cloned repo).",
   "main": "index.js",
   "scripts": {
-    "build Loop": "webpack --config ./2025_Loop_Experiment/webpack.config.cjs",
-    "build Conditionals": "webpack --config ./2025_Conditionals_Experiment/webpack.config.cjs",
+    "Loop": "webpack --config ./2025_Loop_Experiment/webpack.config.cjs",
+    "Conditionals": "webpack --config ./2025_Conditionals_Experiment/webpack.config.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
