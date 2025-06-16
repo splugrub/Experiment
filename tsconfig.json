@@ -22,8 +22,7 @@
                ],
   
     "exclude": [
-      "node_modules",
-      "modules_hard_import/seedrandom"
+      "node_modules"
     ],
     "esModuleInterop": true
     //    "allowSyntheticDefaultImports": true
