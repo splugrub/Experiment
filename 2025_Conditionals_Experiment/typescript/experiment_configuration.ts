@@ -13,7 +13,7 @@ SET_SEED(SEED);
 let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
     return {
 
-        experiment_name: "TypeSystems-ConstructorCalls-Hierarchical",
+        experiment_name: "Conditionals-Experiment",
         seed: SEED,
 
         introduction_pages: [

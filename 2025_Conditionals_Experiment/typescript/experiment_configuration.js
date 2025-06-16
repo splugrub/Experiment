@@ -5,7 +5,7 @@ let SEED = "43";
 SET_SEED(SEED);
 let experiment_configuration_function = (writer) => {
     return {
-        experiment_name: "TypeSystems-ConstructorCalls-Hierarchical",
+        experiment_name: "Conditionals-Experiment",
         seed: SEED,
         introduction_pages: [
             () => writer.print_string_on_stage("Thank you for participating in this experiment.<br><br>" +
