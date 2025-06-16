@@ -13,7 +13,7 @@ SET_SEED(SEED);
 let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
     return {
 
-        experiment_name: "TypeSystems-ConstructorCalls-Hierarchical",
+        experiment_name: "Loops-Experiment",
         seed: SEED,
 
         introduction_pages: [
@@ -154,9 +154,11 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
             { variable: "Script_Language", treatments: ["bash", "pS", "pSforeach", "bmap", "pSreader", "py"] },
             // { variable: "Read_until", treatments: ["1","2","3","4","5"] },
             { variable: "Error_Position", treatments: ["dummy"] },
+            { variable: "Error_Section", treatments: ["dummy"] },
             { variable: "Has_Error", treatments: ["true", "false"] },
+            { variable: "Reading Time", treatments: ["dummy"] },
         ],
-        repetitions: 5,
+        repetitions: 1,
 
         measurement: Reaction_Time(keys(["1", "e"])),
         //measurement: Time_to_finish(text_input_experiment),
@@ -169,27 +171,45 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
             // errorTreatment = true
             let task = new ScriptGenerator(treatment, errorTreatment)
             t.has_pre_task_description = true;
+            
+            let reading_time_start=null;
+            let reading_time_stop=null;
             t.do_print_pre_task = () => {
                 writer.print_string_on_stage("Press [1] if the code has no error and [e] if the code has an error.\n\n")
                 writer.print_string_on_stage("Language: <strong>" + task.language + "</strong>")
                 writer.print_string_on_stage("This preview shows how the correct script should look.")
                 writer.print_string_on_stage(task.generatePreview());
-                writer.print_string_on_stage("\n\nYou can take a break if you need one.")
+                writer.print_string_on_stage("\n\n&#9888; Please do <strong>not</strong> take a break in this preview.")
                 writer.print_string_on_stage("\nPress [Return] to continue.")
+                // Timer starten
+                reading_time_start = new Date().getTime().valueOf();
             }
 
             t.do_print_task = () => {
+                // Timer stoppen
+                reading_time_stop = new Date().getTime().valueOf();
                 writer.clear_stage();
 
                 writer.print_html_on_stage(task.generateScript())
+                let required_milliseconds = reading_time_stop - reading_time_start
+                t.set_computed_variable_value("Reading Time", required_milliseconds.toString())
             };
+            t.set_computed_variable_value("Error_Section", task.getErrorSection())
             t.set_computed_variable_value("Error_Position", task.getErrorPosition())
             t.expected_answer = task.getCorrectAnswer();
             let errorNote = task.errorNote;
 
             t.do_print_after_task_information = () => {
+
+                
                 if (t.given_answer == t.expected_answer) {
-                    writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                    if (t.expected_answer == "e") {
+                        writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                        writer.print_string_on_stage("&#9888; " + errorNote)
+                        writer.print_string_on_stage(task.generatePreview())
+                    } else {
+                        writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                    }
                 } else {
                     if (t.expected_answer == "1") {
                         writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is correct! Correct answer: "+ t.expected_answer +"</span>\n");
@@ -200,6 +220,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                         writer.print_string_on_stage(task.generatePreview())
                     }
                 }
+                writer.print_string_on_stage("\n\nYou can take a break here if you need one.")
             }
         }
     }
