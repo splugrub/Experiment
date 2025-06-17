@@ -34,8 +34,8 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
 
             () => writer.print_string_on_stage(
                 "The code snippets only include logic related to looping through an input file.<br>" +
-                "The loop body is just a comment and will <strong>not</strong> contain an error and can be ignored.<br>" +
-                "In all tasks, the variable for the input file is already defined as <strong>input</strong>.<br><br>" +
+                "The loop body is is represented by a comment and will <strong>not</strong> contain an error and can be ignored during the experiment.<br>" +
+                "In all tasks, the variable <strong>input</strong> is already defined and refers to the input file.<br><br>" +
                 "Here is an example of looping through a file using the <strong>mapfile</strong> command in <strong>Bash</strong>:<br><br>" +
                 "<table style='border: 1px solid black;'>" +
                 "<tr><td style='border: 3px solid darkred; padding: 5px;'><code>" +
@@ -132,20 +132,6 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                 "You entered the experiment phase."
             )),
 
-        // post_questionnaire           :   [
-        //     alternatives("Age","What's your age??",
-        //         ["younger than 18", "between 18 and (excluding) 25", "between 25 and (excluding) 30", "between 30 and (excluding) 35", "between 35 and (excluding) 40", "40 or older"]),
-
-        //     alternatives("Status","What is your current working status?",
-        //         ["Undergraduate student (BSc not yet finished)", "Graduate student (at least BSc finished)", "PhD student", "Professional software developer", "Teacher", "Other"]),
-
-        //     alternatives("Studies","In case you study, what's your subject?",
-        //         ["I do not study", "Computer science", "computer science related (such as information systems, aka WiInf)", "something else in natural sciences", "something else"]),
-
-        //     alternatives("YearsOfExperience", "How many years of experience do you have in software industry?",
-        //         ["none", "less than or equal 1 year", "more than 1 year, but less than or equal 3 years", "more than 3 years, but less than or equal 5 year", "more than 5 years"])
-        // ],
-
         finish_pages: [
             writer.string_page_command(
                 "<p>Almost done. Next, the experiment data will be downloaded (after pressing [Enter]).<br><br>" +
@@ -154,7 +140,6 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
         ],
         layout: [
             { variable: "Script_Language", treatments: ["bash", "pS", "pSforeach", "bmap", "pSreader", "py"] },
-            // { variable: "Read_until", treatments: ["1","2","3","4","5"] },
             { variable: "Error_Position", treatments: ["dummy"] },
             { variable: "Error_Section", treatments: ["dummy"] },
             { variable: "Has_Error", treatments: ["true", "false"] },
@@ -163,26 +148,23 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
         repetitions: 5,
 
         measurement: Reaction_Time(keys(["1", "e"])),
-        //measurement: Time_to_finish(text_input_experiment),
 
         task_configuration: (t: Task) => {
 
             let treatment = t.treatment_value("Script_Language") as "bash" | "pS" | "pSforeach" | "bmap" | "pSreader" | "py"
-            // treatment = "pS"
             let errorTreatment = t.treatment_value("Has_Error") === "true"
-            // errorTreatment = true
             let task = new ScriptGenerator(treatment, errorTreatment)
             t.has_pre_task_description = true;
 
             let reading_time_start = null;
             let reading_time_stop = null;
             t.do_print_pre_task = () => {
-                writer.print_string_on_stage("Press [1] if the code has no error and [e] if the code has an error.\n\n")
                 writer.print_string_on_stage("Language: <strong>" + task.language + "</strong>")
                 writer.print_string_on_stage("This preview shows how the correct script should look.")
                 writer.print_string_on_stage(task.generatePreview());
-                writer.print_string_on_stage("\n\n&#9888; Please do <strong>not</strong> take a break in this preview.")
-                writer.print_string_on_stage("\nPress [Return] to continue.")
+                writer.print_string_on_stage("Press <code>[1]</code> if the code has no error and <code>[e]</code> if the code has an error.<br><br>\n")
+                writer.print_string_on_stage("&#9888; Please do <strong>not</strong> take a break in this preview.")
+                writer.print_string_on_stage("Press [Return] to continue.")
                 // Timer starten
                 reading_time_start = new Date().getTime().valueOf();
             }
@@ -222,7 +204,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                         writer.print_string_on_stage(task.generateErrorPreview())
                     }
                 }
-                writer.print_string_on_stage("\n\nYou can take a break here if you need one.")
+                writer.print_string_on_stage("\n<br><br>You can take a break here if you need one.")
             }
         },
         pre_activation_function: (f: Sequential_Forwarder_Forwarder) => {
