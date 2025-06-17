@@ -158,7 +158,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
             { variable: "Has_Error", treatments: ["true", "false"] },
             { variable: "Reading Time", treatments: ["dummy"] },
         ],
-        repetitions: 1,
+        repetitions: 5,
 
         measurement: Reaction_Time(keys(["1", "e"])),
         //measurement: Time_to_finish(text_input_experiment),
