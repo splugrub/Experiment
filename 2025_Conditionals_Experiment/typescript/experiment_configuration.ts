@@ -121,6 +121,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                         writer.print_string_on_stage(task.generateErrorPreview())
                     }
                 }
+                writer.print_string_on_stage("<br>Press [Return] to continue.")
             }
         },
         pre_activation_function: (f:Sequential_Forwarder_Forwarder) => {
