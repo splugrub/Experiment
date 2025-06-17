@@ -204,7 +204,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                         writer.print_string_on_stage(task.generateErrorPreview())
                     }
                 }
-                writer.print_string_on_stage("\n<br><br>You can take a break here if you need one.")
+                writer.print_string_on_stage("\n<br>You can take a break here if you need one.")
                 writer.print_string_on_stage("Press [Return] to continue.")
             }
         },
