@@ -1646,6 +1646,9 @@ function BROWSER_EXPERIMENT(creator) {
     };
     // @ts-ignore
     document.addEventListener("keydown", key_forwarder, false);
+    if (cfg.pre_activation_function != undefined) {
+        cfg.pre_activation_function(experiment_automata);
+    }
     experiment_automata.set_active();
 }
 //# sourceMappingURL=Browser_Output_Writer.js.map
@@ -2746,6 +2749,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Repeat: () => (/* binding */ Repeat),
 /* harmony export */   iterate: () => (/* binding */ iterate),
 /* harmony export */   iterate_both: () => (/* binding */ iterate_both),
+/* harmony export */   iterate_matrix: () => (/* binding */ iterate_matrix),
 /* harmony export */   iterate_with_counter: () => (/* binding */ iterate_with_counter),
 /* harmony export */   repeat: () => (/* binding */ repeat),
 /* harmony export */   repeat_: () => (/* binding */ repeat_),
@@ -2764,6 +2768,13 @@ function iterate_both(a1, a2, f) {
     for (let e of a1) {
         f(e, a2[counter++]);
     }
+}
+function iterate_matrix(matrix, f) {
+    iterate(matrix).do_with_counter((row, row_no) => {
+        iterate(matrix[row_no]).do_with_counter((element, column_no) => {
+            f(element, row_no, column_no);
+        });
+    });
 }
 function iterate(array) {
     return new Iterator(array);
@@ -3355,11 +3366,35 @@ let experiment_configuration_function = (writer) => {
                 }
                 writer.print_string_on_stage("\n\nYou can take a break here if you need one.");
             };
+        },
+        pre_activation_function: (f) => {
+            let treatments = ["bash", "pS", "pSforeach", "bmap", "pSreader", "py"];
+            let tasks = f.forwarders[2].experiment_definition.tasks;
+            let new_tasks = [];
+            let counter = 0;
+            let next_expected_treatment_no = 0;
+            while (tasks.length > 0) {
+                if (tasks[counter].treatment_value("Script_Language") == treatments[next_expected_treatment_no]) {
+                    let element = tasks[counter];
+                    tasks.splice(counter, 1);
+                    new_tasks.push(element);
+                    counter = 0;
+                    if (next_expected_treatment_no == 5) {
+                        next_expected_treatment_no = 0;
+                    }
+                    else {
+                        next_expected_treatment_no++;
+                    }
+                }
+                else {
+                    counter++;
+                }
+            }
+            f.forwarders[2].experiment_definition.tasks = new_tasks;
         }
     };
 };
 (0,_N_of_1_Experimentation_modules_Experimentation_Browser_Output_Writer_js__WEBPACK_IMPORTED_MODULE_0__.BROWSER_EXPERIMENT)(experiment_configuration_function);
-// 
 
 })();
 
