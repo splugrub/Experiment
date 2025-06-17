@@ -1,4 +1,6 @@
 import { BROWSER_EXPERIMENT } from "../../N-of-1-Experimentation/modules/Experimentation/Browser_Output_Writer.js";
+import { Experiment_Forwarder } from "../../N-of-1-Experimentation/modules/Automata_Forwarders/Experiment_Forwarder.js";
+import { Sequential_Forwarder_Forwarder } from "../../N-of-1-Experimentation/modules/Books/Sequential_Forwarder_Forwarder.js"
 import {
     alternatives,
     Experiment_Output_Writer, keys, random_array_element, Reaction_Time, Time_to_finish, text_input_experiment,
@@ -31,7 +33,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
             ),
 
             () => writer.print_string_on_stage(
-                "The code snippets only include logic related to looping through an input file.<br>" + 
+                "The code snippets only include logic related to looping through an input file.<br>" +
                 "The loop body is just a comment and will <strong>not</strong> contain an error and can be ignored.<br>" +
                 "In all tasks, the variable for the input file is already defined as <strong>input</strong>.<br><br>" +
                 "Here is an example of looping through a file using the <strong>mapfile</strong> command in <strong>Bash</strong>:<br><br>" +
@@ -171,9 +173,9 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
             // errorTreatment = true
             let task = new ScriptGenerator(treatment, errorTreatment)
             t.has_pre_task_description = true;
-            
-            let reading_time_start=null;
-            let reading_time_stop=null;
+
+            let reading_time_start = null;
+            let reading_time_stop = null;
             t.do_print_pre_task = () => {
                 writer.print_string_on_stage("Press [1] if the code has no error and [e] if the code has an error.\n\n")
                 writer.print_string_on_stage("Language: <strong>" + task.language + "</strong>")
@@ -201,7 +203,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
 
             t.do_print_after_task_information = () => {
 
-                
+
                 if (t.given_answer == t.expected_answer) {
                     if (t.expected_answer == "e") {
                         writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
@@ -212,7 +214,7 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                     }
                 } else {
                     if (t.expected_answer == "1") {
-                        writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is correct! Correct answer: "+ t.expected_answer +"</span>\n");
+                        writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is correct! Correct answer: " + t.expected_answer + "</span>\n");
                     }
                     else {
                         writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is incorrect! Correct answer: " + t.expected_answer + "</span>\n");
@@ -222,9 +224,34 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                 }
                 writer.print_string_on_stage("\n\nYou can take a break here if you need one.")
             }
+        },
+        pre_activation_function: (f: Sequential_Forwarder_Forwarder) => {
+            let treatments = ["bash", "pS", "pSforeach", "bmap", "pSreader", "py"];
+
+            let tasks = (f.forwarders[2] as Experiment_Forwarder).experiment_definition.tasks;
+            let new_tasks = [];
+
+            let counter = 0;
+            let next_expected_treatment_no = 0;
+            while (tasks.length > 0) {
+                if (tasks[counter].treatment_value("Script_Language") == treatments[next_expected_treatment_no]) {
+                    let element = tasks[counter];
+                    tasks.splice(counter, 1);
+                    new_tasks.push(element);
+                    counter = 0;
+                    if (next_expected_treatment_no == 5) {
+                        next_expected_treatment_no = 0;
+                    } else {
+                        next_expected_treatment_no++;
+                    }
+                } else {
+                    counter++;
+                }
+            }
+
+            (f.forwarders[2] as Experiment_Forwarder).experiment_definition.tasks = new_tasks;
         }
     }
 }
 
 BROWSER_EXPERIMENT(experiment_configuration_function);
-// 

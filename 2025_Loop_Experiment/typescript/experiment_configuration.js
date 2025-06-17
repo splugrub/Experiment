@@ -168,9 +168,33 @@ let experiment_configuration_function = (writer) => {
                 }
                 writer.print_string_on_stage("\n\nYou can take a break here if you need one.");
             };
+        },
+        pre_activation_function: (f) => {
+            let treatments = ["bash", "pS", "pSforeach", "bmap", "pSreader", "py"];
+            let tasks = f.forwarders[2].experiment_definition.tasks;
+            let new_tasks = [];
+            let counter = 0;
+            let next_expected_treatment_no = 0;
+            while (tasks.length > 0) {
+                if (tasks[counter].treatment_value("Script_Language") == treatments[next_expected_treatment_no]) {
+                    let element = tasks[counter];
+                    tasks.splice(counter, 1);
+                    new_tasks.push(element);
+                    counter = 0;
+                    if (next_expected_treatment_no == 5) {
+                        next_expected_treatment_no = 0;
+                    }
+                    else {
+                        next_expected_treatment_no++;
+                    }
+                }
+                else {
+                    counter++;
+                }
+            }
+            f.forwarders[2].experiment_definition.tasks = new_tasks;
         }
     };
 };
 BROWSER_EXPERIMENT(experiment_configuration_function);
-// 
 //# sourceMappingURL=experiment_configuration.js.map
