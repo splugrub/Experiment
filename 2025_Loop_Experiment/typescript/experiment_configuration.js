@@ -111,7 +111,7 @@ let experiment_configuration_function = (writer) => {
             { variable: "Has_Error", treatments: ["true", "false"] },
             { variable: "Reading Time", treatments: ["dummy"] },
         ],
-        repetitions: 1,
+        repetitions: 5,
         measurement: Reaction_Time(keys(["1", "e"])),
         //measurement: Time_to_finish(text_input_experiment),
         task_configuration: (t) => {
@@ -150,7 +150,7 @@ let experiment_configuration_function = (writer) => {
                     if (t.expected_answer == "e") {
                         writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
                         writer.print_string_on_stage("&#9888; " + errorNote);
-                        writer.print_string_on_stage(task.generatePreview());
+                        writer.print_string_on_stage(task.generateErrorPreview());
                     }
                     else {
                         writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
@@ -163,7 +163,7 @@ let experiment_configuration_function = (writer) => {
                     else {
                         writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is incorrect! Correct answer: " + t.expected_answer + "</span>\n");
                         writer.print_string_on_stage("&#9888; " + errorNote);
-                        writer.print_string_on_stage(task.generatePreview());
+                        writer.print_string_on_stage(task.generateErrorPreview());
                     }
                 }
                 writer.print_string_on_stage("\n\nYou can take a break here if you need one.");

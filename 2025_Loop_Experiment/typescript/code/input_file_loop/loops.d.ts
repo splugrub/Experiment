@@ -4,6 +4,7 @@ export declare class ScriptGenerator {
     private withError;
     private scriptLines;
     private correctScript;
+    private errorPreview;
     private errorPosition;
     private errorSection;
     errorNote: string;
@@ -13,6 +14,7 @@ export declare class ScriptGenerator {
     getErrorSection(): string;
     private getRandomNumber;
     generatePreview(): string;
+    generateErrorPreview(): string;
     generateScript(): string;
     getErrorPosition(): string;
     private getBashScriptWithCondition;
@@ -21,6 +23,7 @@ export declare class ScriptGenerator {
     private getBashForLoopMapfile;
     private getPowershellNetClassStreamReader;
     private getPythonLoop;
+    private highlightRed;
     createErrorPosition(): void;
 }
 export {};
