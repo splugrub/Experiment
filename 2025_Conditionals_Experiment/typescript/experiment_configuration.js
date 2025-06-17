@@ -43,16 +43,6 @@ let experiment_configuration_function = (writer) => {
         ],
         pre_run_training_instructions: writer.string_page_command("You entered the training phase."),
         pre_run_experiment_instructions: writer.string_page_command(writer.convert_string_to_html_string("You entered the experiment phase.")),
-        // post_questionnaire           :   [
-        //     alternatives("Age","What's your age??",
-        //         ["younger than 18", "between 18 and (excluding) 25", "between 25 and (excluding) 30", "between 30 and (excluding) 35", "between 35 and (excluding) 40", "40 or older"]),
-        //     alternatives("Status","What is your current working status?",
-        //         ["Undergraduate student (BSc not yet finished)", "Graduate student (at least BSc finished)", "PhD student", "Professional software developer", "Teacher", "Other"]),
-        //     alternatives("Studies","In case you study, what's your subject?",
-        //         ["I do not study", "Computer science", "computer science related (such as information systems, aka WiInf)", "something else in natural sciences", "something else"]),
-        //     alternatives("YearsOfExperience", "How many years of experience do you have in software industry?",
-        //         ["none", "less than or equal 1 year", "more than 1 year, but less than or equal 3 years", "more than 3 years, but less than or equal 5 year", "more than 5 years"])
-        // ],
         finish_pages: [
             writer.string_page_command("<p>Almost done. Next, the experiment data will be downloaded (after pressing [Enter]).<br><br>" +
                 "Please, send the downloaded file to the experimenter who will do the analysis</p>")
@@ -70,9 +60,9 @@ let experiment_configuration_function = (writer) => {
             let task = new ConditionScriptGenerator(scriptLanguage, errorTreatment);
             t.has_pre_task_description = true;
             t.do_print_pre_task = () => {
-                writer.print_string_on_stage("Press [1] if the code has no error and [e] if the code has an error.\n\n");
                 writer.print_string_on_stage("Task: " + "<strong>" + scriptLanguage + "</strong>");
-                writer.print_string_on_stage("\n\nYou can take a break if you need one.");
+                writer.print_string_on_stage("Press <code>[1]</code> if the code has no error and <code>[e]</code> if the code has an error.<br><br>");
+                writer.print_string_on_stage("You can take a break if you need one.");
                 writer.print_string_on_stage("\nPress [Return] to continue.");
             };
             t.do_print_task = () => {
