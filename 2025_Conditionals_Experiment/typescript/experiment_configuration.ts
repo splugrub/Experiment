@@ -110,7 +110,13 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
 
             t.do_print_after_task_information = () => {
                 if (t.given_answer == t.expected_answer) {
-                    writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                    if (t.expected_answer == "e") {
+                        writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                        writer.print_string_on_stage("&#9888; " + errorNote)
+                        writer.print_string_on_stage(task.generateErrorPreview())
+                    } else {
+                        writer.print_string_on_stage("<div class='correct'>" + "CORRECT! Correct answer: " + t.expected_answer + "\n" + "</div>");
+                    }
                 } else {
                     if (t.expected_answer == "1") {
                         writer.print_string_on_stage("<span style=\"color: red;\">WRONG! The code is correct! Correct answer: "+ t.expected_answer +"</span>\n");
