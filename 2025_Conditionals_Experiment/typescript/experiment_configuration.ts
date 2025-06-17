@@ -1,4 +1,6 @@
 import { BROWSER_EXPERIMENT } from "../../N-of-1-Experimentation/modules/Experimentation/Browser_Output_Writer.js";
+import { Experiment_Forwarder } from "../../N-of-1-Experimentation/modules/Automata_Forwarders/Experiment_Forwarder.js";
+import { Sequential_Forwarder_Forwarder } from "../../N-of-1-Experimentation/modules/Books/Sequential_Forwarder_Forwarder.js"
 import {
     alternatives,
     Experiment_Output_Writer, keys, random_array_element, Reaction_Time, Time_to_finish, text_input_experiment,
@@ -134,6 +136,32 @@ let experiment_configuration_function = (writer: Experiment_Output_Writer) => {
                     }
                 }
             }
+        },
+        pre_activation_function: (f:Sequential_Forwarder_Forwarder) => {
+            let treatments = ["Bash", "PowerShell", "Python"];
+
+            let tasks = (f.forwarders[2] as Experiment_Forwarder).experiment_definition.tasks;
+            let new_tasks = [];
+
+            let counter = 0;
+            let next_expected_treatment_no = 0;
+            while (tasks.length > 0) {
+                if (tasks[counter].treatment_value("Script_Language") == treatments[next_expected_treatment_no]) {
+                    let element = tasks[counter];
+                    tasks.splice(counter, 1);
+                    new_tasks.push(element);
+                    counter = 0;
+                    if (next_expected_treatment_no == 2) {
+                        next_expected_treatment_no = 0;
+                    } else {
+                        next_expected_treatment_no++;
+                    }
+                } else {
+                    counter++;
+                }
+            }
+
+            (f.forwarders[2] as Experiment_Forwarder).experiment_definition.tasks = new_tasks;
         }
     }
 }
